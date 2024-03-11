@@ -16,11 +16,13 @@ There certainly exist commercial products that do this, but they're pricey.  May
 
 To modify / rebuild the Jar file used for JCL parsing: 
 
+```
 cd jcl
 make clean
 [edit src/Demo01.java]
 make
 make jar
+```
 
 ### Static Code Analysis
 
