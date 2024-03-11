@@ -12,6 +12,16 @@ In both cases, the intent is to produce a flat file which can be loaded into a D
 
 There certainly exist commercial products that do this, but they're pricey.  Maybe what I can do for free is good enough.  If it's not then you've got yourself a justification for one of those commercial products.
 
+### M.O. fork docs:
+
+To modify / rebuild the Jar file used for JCL parsing: 
+
+cd jcl
+make clean
+[edit src/Demo01.java]
+make
+make jar
+
 ### Static Code Analysis
 
 Static code analysis looks at the source code.  The process has no knowledge of what happens as the code executes.  For purposes of application portfolio analysis, this results in some representation of what
