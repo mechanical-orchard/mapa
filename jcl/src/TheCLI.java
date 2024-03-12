@@ -16,6 +16,7 @@ option values.  It is growing into a utility class, which may bear
 future refactoring.  Or not.
 */
 public class TheCLI{
+	private static final String OUT_DIR_OPT = "outDir";
 	public final Logger LOGGER = Logger.getLogger(Demo01.class.getName());
 	public String[] args = null;
 	public Options options = new Options();
@@ -28,6 +29,8 @@ public class TheCLI{
 	public Hashtable<String, String> mappedCntlPaths = new Hashtable<>();
 	public String outcsvFileName = null;
 	public String outtreeFileName = null;
+
+	public String outDir = "./";
 	public Boolean unitTest = false;
 	public Boolean saveTemp = false;
 	public Integer sanity = 20;
@@ -58,6 +61,7 @@ public class TheCLI{
 			, "name of a file in which to store the gathered information in csv format");
 		Option outtree = new Option("outtree", true
 			, "name of a file in which to store the gathered information in \"tree\" format");
+		Option outputDirectory = new Option(OUT_DIR_OPT, true, "directory to output ASTs as .tsv files");
 		Option logLevel = new Option("logLevel", true
 			, "logging level for this run {SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST}");
 		Option unitTest = new Option("unitTest", false
@@ -77,6 +81,7 @@ public class TheCLI{
 		this.options.addOption(cntlList);
 		this.options.addOption(outcsv);
 		this.options.addOption(outtree);
+		this.options.addOption(outputDirectory);
 		this.options.addOption(logLevel);
 		this.options.addOption(unitTest);
 		this.options.addOption(saveTemp);
@@ -149,6 +154,10 @@ public class TheCLI{
 
 		if (this.line.hasOption("outtree")) {
 			this.outtreeFileName = this.line.getOptionValue("outtree");
+		}
+
+		if (this.line.hasOption(OUT_DIR_OPT)) {
+			this.outDir = this.line.getOptionValue(OUT_DIR_OPT);
 		}
 
 		if (this.line.hasOption("logLevel")) {
