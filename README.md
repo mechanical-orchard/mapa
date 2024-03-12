@@ -19,8 +19,10 @@ To modify / rebuild the Jar file used for JCL parsing:
 ```
 cd jcl
 make clean
-[edit src/Demo01.java]
-make
+make cleanmine
+[edit src/Demo01.java or whatever other class]
+make  # Will cause warnings. Safe to ignore
+make mine
 make jar
 ```
 
