@@ -64,12 +64,12 @@ public static void main(String[] args) throws Exception {
 
 	if (CLI.outtreeFileName == null) {
 	} else {
-        outtree = new BufferedWriter(new FileWriter(CLI.outtreeFileName));
+		outtree = new BufferedWriter(new FileWriter(CLI.outtreeFileName));
 	}
 
 	if (CLI.outcsvFileName == null) {
 	} else {
-        outcsv = new BufferedWriter(new FileWriter(CLI.outcsvFileName));
+		outcsv = new BufferedWriter(new FileWriter(CLI.outcsvFileName));
 	}
 
 	for (String aFileName: CLI.fileNamesToProcess) {
@@ -130,7 +130,7 @@ public static void main(String[] args) throws Exception {
 				StringBuffer sb = new StringBuffer();
 				sb.append(System.getProperty("line.separator"));
 				jobs.get(0).toTree(sb);
-		        outtree.write(sb.toString());
+				outtree.write(sb.toString());
 				LOGGER.fine(sb.toString());
 			}
 			if (CLI.outcsvFileName == null) {
@@ -195,7 +195,7 @@ public static void main(String[] args) throws Exception {
 				StringBuffer sb = new StringBuffer();
 				sb.append(System.getProperty("line.separator"));
 				procs.get(0).toTree(sb);
-		        outtree.write(sb.toString());
+				outtree.write(sb.toString());
 				LOGGER.fine(sb.toString());
 			}
 			if (CLI.outcsvFileName == null) {
@@ -220,8 +220,8 @@ public static void main(String[] args) throws Exception {
 
 	if (CLI.outtreeFileName == null) {
 	} else {
-        outtree.flush();
-        outtree.close();
+		outtree.flush();
+		outtree.close();
 	}
 
 	if (CLI.outcsvFileName == null) {
@@ -378,6 +378,12 @@ public static void main(String[] args) throws Exception {
 		LOGGER.finer("----------walking tree with " + listener.getClass().getName());
 	
 		try {
+			String filePath = CLI.outtreeFileName + ".tree.tsv";
+			List<String> ruleNamesList = Arrays.asList(parser.getRuleNames());
+			String prettyTree = TreeUtils.toPrettyTree(tree, ruleNamesList);
+			LOGGER.info("----------output file to " + filePath);
+
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 			walker.walk(listener, tree);
 		} catch(Exception e) {
 			LOGGER.warning(listener.getClass().getName() + " error " + e);
