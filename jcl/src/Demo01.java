@@ -39,10 +39,7 @@ public static void main(String[] args) throws Exception {
 	System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc] %4$s: %5$s%n");
 
 	try {
-		fileHandler = new FileHandler("./" + Demo01.class.getName() + "-" + dateTimeStamp + ".log");
-		fileHandler.setFormatter(new SimpleFormatter());
-		LOGGER.addHandler(fileHandler);
-		fileHandler.setLevel(Level.ALL);
+		LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
 		LOGGER.setLevel(Level.ALL);
 		LOGGER.info("Logger Name: " + LOGGER.getName());
 	} catch (Exception e) {
