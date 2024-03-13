@@ -11,7 +11,6 @@ import java.time.*;
 import java.time.format.*;
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.util.logging.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -111,7 +110,7 @@ public static void main(String[] args) throws Exception {
 			*/
 			ArrayList<Proc> procs = new ArrayList<>();
 			ArrayList<Job> jobs = new ArrayList<>();
-			lexAndParse(jobs, procs, finalJobFile.getPath(), fileNb);
+			lexAndParse(jobs, procs, aFileName, finalJobFile.getPath(), fileNb);
 			if (jobs.size() == 0) {
 				/*
 				There was an error in parsing, possibly the input was correct
@@ -177,7 +176,8 @@ public static void main(String[] args) throws Exception {
 			*/
 			ArrayList<Proc> procs = new ArrayList<>();
 			ArrayList<Job> jobs = new ArrayList<>();
-			lexAndParse(jobs, procs, finalProcFile.getPath(), fileNb);
+			// we added an outdir for pushing out
+			lexAndParse(jobs, procs, aFileName, finalProcFile.getPath(), fileNb);
 			if (procs.size() == 0) {
 				/*
 				There was an error in parsing, possibly the input was correct
@@ -283,9 +283,10 @@ public static void main(String[] args) throws Exception {
 		}
 		
 		ParseTreeWalker walker = new ParseTreeWalker();
-	
+
 		PPListener listener = new PPListener(jobs, procs, fileName, fileNb, baseDir, null, null, LOGGER, CLI);
-	
+//		MOListener listener = new MOListener();
+
 		LOGGER.finer("----------walking tree with " + listener.getClass().getName());
 	
 		try {
@@ -344,6 +345,7 @@ public static void main(String[] args) throws Exception {
 	public static void lexAndParse(
 					ArrayList<Job> jobs
 					, ArrayList<Proc> procs
+					, String originalFilePath
 					, String fileName
 					, int fileNb
 					) throws IOException {
@@ -376,19 +378,21 @@ public static void main(String[] args) throws Exception {
 		JobListener listener = new JobListener(jobs, procs, fileName, fileNb, LOGGER, CLI);
 	
 		LOGGER.finer("----------walking tree with " + listener.getClass().getName());
-	
-		try {
-			String filePath = CLI.outtreeFileName + ".tree.tsv";
-			List<String> ruleNamesList = Arrays.asList(parser.getRuleNames());
-			String prettyTree = TreeUtils.toPrettyTree(tree, ruleNamesList);
-			LOGGER.info("----------output file to " + filePath);
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+		try {
 			walker.walk(listener, tree);
+
+			String originalFileName = Paths.get(originalFilePath).getFileName().toString();
+			Path filePath = Paths.get(CLI.outDir, originalFileName + ".tree.tsv");
+			List<String> ruleNamesList = Arrays.asList(parser.getRuleNames());
+//			String prettyTree = TreeUtils.toPrettyTree(tree, ruleNamesList);
+//			BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()));
+//			writer.write(prettyTree);
+//			writer.close();
+			LOGGER.info("----------output tree file to " + filePath);
 		} catch(Exception e) {
 			LOGGER.warning(listener.getClass().getName() + " error " + e);
 		}
-
 	}
 
 	/**

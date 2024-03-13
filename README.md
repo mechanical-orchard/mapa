@@ -1,5 +1,28 @@
 ## Mainframe Application Portfolio Analysis
 
+### M.O. Dev Setup
+
+First, install Kotlin:
+
+```
+asdf plugin add kotlin
+asdf install
+```
+
+To recompile the JCL parser jar:
+
+```
+cd jcl
+make clean
+make cleanmine
+[edit src/Demo01.java or whatever other class]
+make  # Will cause warnings. Safe to ignore
+make mine
+make jar
+```
+
+## Explainer
+
 The intent is to create at least part of what I would have wanted when I was being paid to be a mainframe application development tools person.
 
 I was often asked application impact analysis questions, what runs, how often, which program calls which other programs, et. al.
@@ -11,20 +34,6 @@ In the jcl directory you will find something analagous for JCL.
 In both cases, the intent is to produce a flat file which can be loaded into a DBMS and used as part of a configuration management system.  Supplement with a dump of your CICS definitions and selected entries from your DB2 catalog (triggers, mostly) and you can build yourself a nice map of your portfolio.
 
 There certainly exist commercial products that do this, but they're pricey.  Maybe what I can do for free is good enough.  If it's not then you've got yourself a justification for one of those commercial products.
-
-### M.O. fork docs:
-
-To modify / rebuild the Jar file used for JCL parsing: 
-
-```
-cd jcl
-make clean
-make cleanmine
-[edit src/Demo01.java or whatever other class]
-make  # Will cause warnings. Safe to ignore
-make mine
-make jar
-```
 
 ### Static Code Analysis
 
