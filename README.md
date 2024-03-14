@@ -17,14 +17,11 @@ There certainly exist commercial products that do this, but they're pricey.  May
 To modify / rebuild the Jar file used for JCL parsing: 
 
 ```
-cd jcl
-make clean
-make cleanmine
-[edit src/Demo01.java or whatever other class]
-make  # Will cause warnings. Safe to ignore
-make mine
-make jar
+cd mech
+./gradlew build
 ```
+
+The jar will be built to `./mech/build/libs/mech-1.0-SNAPSHOT.jar`.
 
 ### Static Code Analysis
 
