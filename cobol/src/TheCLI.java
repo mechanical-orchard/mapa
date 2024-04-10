@@ -184,6 +184,15 @@ public class TheCLI{
 
 		this.LOGGER.finer("----------walking tree with " + listener.getClass().getName());
 
+		String[] ruleNamesList = parser.ruleNames;
+		String prettyTree = TreeUtils.toPrettyTree(tree, List.of(ruleNamesList));
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("tmp.tree.tsv"))) {
+			writer.write(prettyTree);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		walker.walk(listener, tree);
 
 		this.LOGGER.finest("compOptDefines: " + this.compOptDefines);

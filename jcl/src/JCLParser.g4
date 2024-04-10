@@ -408,6 +408,7 @@ example: DCB=(DSORG=DA,HIARCHY=0)
 Whether or not HIARCHY=1 on its own (without an associated DCB=
 would be tolerated by JES is currently unknown.
 */
+
 ddParmHIARCHY : HIARCHY EQUAL keywordOrSymbolic ;
 ddParmHOLD : HOLD EQUAL keywordOrSymbolic ;
 ddParmINTVL : INTVL EQUAL keywordOrSymbolic ;

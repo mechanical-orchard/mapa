@@ -128,3 +128,4 @@ jcl/test*.tsv
 .idea/
 *.iml
 .DS_Store
+.aider*
