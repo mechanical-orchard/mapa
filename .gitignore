@@ -129,3 +129,4 @@ jcl/test*.tsv
 *.iml
 .DS_Store
 .aider*
+**/gen
