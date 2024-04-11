@@ -10,6 +10,13 @@ Currently (10-Feb-2023) a work in progress.  Parsing COBOL to extract various so
 
 "Work in progress" means I'm adding to this as it suits me.  It's a hobby, not intended to ever be finished.  But you might find it useful.
 
+```
+make clean
+make cleanmine
+make all
+make mine
+make jar
+```
 ### How To Run
 
 Download the .jar files.  If you have provenance issues feel free to obtain the ANTLR jar from https://www.antlr.org and the commons-cli jar from https://commons.apache.org/proper/commons-cli/. 

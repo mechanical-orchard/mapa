@@ -128,7 +128,16 @@ class CobolSource {
 		if (this.CLI.profile) {
 			this.profileParser(parser, "lookForBasis");
 		}
-	
+
+		String[] ruleNamesList = parser.ruleNames;
+		String prettyTree = TreeUtils.toPrettyTree(tree, List.of(ruleNamesList));
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.CLI.outtreeFileName))) {
+			writer.write(prettyTree);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		ParseTreeWalker walker = new ParseTreeWalker();
 	
 		BasisListener listener = new BasisListener(this.LOGGER, this.CLI);

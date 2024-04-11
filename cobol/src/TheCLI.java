@@ -24,6 +24,7 @@ public class TheCLI{
 	public Boolean saveTemp = false;
 	public Boolean profile = false;
 	public ArrayList<CondCompVar> compOptDefines = new ArrayList<>();
+	public String outtreeFileName = null;
 
 	public TheCLI(String[] args, Logger LOGGER) throws Exception {
 
@@ -42,6 +43,7 @@ public class TheCLI{
 			, "name of a file containing a list of >>DEFINE statements for conditional compilation variables and their values");
 		Option out = new Option("out", true
 			, "name of a file in which to store the CALLs, EXEC CICS LINKs, EXEC CICS XCTLs, and EXEC SQL CALLs");
+		Option outtree = new Option("outtree", true, "name of a file in which to store the gathered information in \"tree\" format");
 		Option logLevel = new Option("logLevel", true
 			, "logging level for this run {SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST}");
 		Option unitTest = new Option("unitTest", false
@@ -58,6 +60,7 @@ public class TheCLI{
 		this.options.addOption(copyList);
 		this.options.addOption(defList);
 		this.options.addOption(out);
+		this.options.addOption(outtree);
 		this.options.addOption(logLevel);
 		this.options.addOption(unitTest);
 		this.options.addOption(saveTemp);
@@ -65,14 +68,14 @@ public class TheCLI{
 		this.options.addOption(help);
 
 		try {
-			this.line = parser.parse( options, args );
-		} catch( ParseException exp ) {
-			this.LOGGER.severe( "Command line parsing failed.  Reason: " + exp.getMessage() );
+			this.line = parser.parse(options, args);
+		} catch (Exception exp) {
+			this.LOGGER.severe("Command line parsing failed.  Reason: " + exp.getMessage());
 			System.exit(16);
 		}
 
 		if (this.line.hasOption("help")) {
-			this.formatter.printHelp( "CallTree", options, true );
+			this.formatter.printHelp("CallTree", options, true);
 			System.exit(0);
 		}
 
@@ -83,7 +86,7 @@ public class TheCLI{
 			this.fileNamesToProcess.addAll(list);
 		} else {
 			this.LOGGER.config("Either the file or the fileList option must be provided");
-			this.formatter.printHelp( "CallTree", options, true );
+			this.formatter.printHelp("CallTree", options, true);
 			System.exit(16);
 		}
 
@@ -94,7 +97,7 @@ public class TheCLI{
 			this.copyPaths.addAll(list);
 		} else {
 			this.LOGGER.config("Either the copy or the copyList option must be provided");
-			this.formatter.printHelp( "CallTree", options, true );
+			this.formatter.printHelp("CallTree", options, true);
 			System.exit(16);
 		}
 
@@ -106,8 +109,12 @@ public class TheCLI{
 			this.outFileName = this.line.getOptionValue("out");
 		}
 
+		if (this.line.hasOption("outtree")) {
+			this.outtreeFileName = this.line.getOptionValue("outtree");
+		}
+
 		if (this.line.hasOption("logLevel")) {
-			switch(this.line.getOptionValue("logLevel")) {
+			switch (this.line.getOptionValue("logLevel")) {
 				case "SEVERE":
 					this.LOGGER.setLevel(Level.SEVERE);
 					break;
@@ -170,29 +177,21 @@ public class TheCLI{
 
 		this.LOGGER.fine("parseDefines");
 
-		CharStream aCharStream = fromFileName(fileName);  //load the file
-		CobolPreprocessorLexer lexer = new CobolPreprocessorLexer(aCharStream);  //instantiate a lexer
-		CommonTokenStream tokens = new CommonTokenStream(lexer); //scan stream for tokens
-		CobolPreprocessorParser parser = new CobolPreprocessorParser(tokens);  //parse the tokens
+		CharStream aCharStream = fromFileName(fileName); // load the file
+		CobolPreprocessorLexer lexer = new CobolPreprocessorLexer(aCharStream); // instantiate a lexer
+		CommonTokenStream tokens = new CommonTokenStream(lexer); // scan stream for tokens
+		CobolPreprocessorParser parser = new CobolPreprocessorParser(tokens); // parse the tokens
 
 		ParseTree tree = parser.startRule(); // parse the content and get the tree
 
 		ParseTreeWalker walker = new ParseTreeWalker();
 
-		CompilerDirectingStatementListener listener = 
-			new CompilerDirectingStatementListener(compDirStmts, this.compOptDefines, this.LOGGER, this);
+		CompilerDirectingStatementListener listener = new CompilerDirectingStatementListener(compDirStmts,
+				this.compOptDefines, this.LOGGER, this);
 
 		this.LOGGER.finer("----------walking tree with " + listener.getClass().getName());
 
 		String[] ruleNamesList = parser.ruleNames;
-		String prettyTree = TreeUtils.toPrettyTree(tree, List.of(ruleNamesList));
-
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter("tmp.tree.tsv"))) {
-			writer.write(prettyTree);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		walker.walk(listener, tree);
 
 		this.LOGGER.finest("compOptDefines: " + this.compOptDefines);
